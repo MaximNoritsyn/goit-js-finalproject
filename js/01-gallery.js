@@ -1,8 +1,13 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
-//elements
+//constants
 const galleryContainerEl = document.querySelector('.gallery');
+const modalWindow = basicLightbox.create(`
+    <div div class= "modal" >
+        <img src="" width="800" height="600">
+    </div>
+`);
 
 //functions
 function createGalleryItemMarkup({ preview, original, description }) {
@@ -27,12 +32,14 @@ function handlerGalleryContainerElClick(event) {
     if (event.target === event.currentTarget) {
         return;
     }
-    const instance = basicLightbox.create(`
-    <div class="modal">
-        <img src="${event.target.dataset.source}" width="800" height="600">
-    </div>
-`);
-    instance.show();
+    modalWindow.element().querySelector('img').src = event.target.dataset.source;
+    modalWindow.show();
+}
+
+function handlerModalClose(event) {
+    if (event.key === 'Escape') {
+        modalWindow.close();
+    }
 }
 
 //main code
@@ -40,3 +47,4 @@ galleryContainerEl.insertAdjacentHTML('beforeend', createGalleryMarkup(galleryIt
 
 galleryContainerEl.addEventListener('click', handlerGalleryContainerElClick);
 
+window.addEventListener('keydown', handlerModalClose);

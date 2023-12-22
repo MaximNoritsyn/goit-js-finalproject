@@ -41,7 +41,6 @@ function handlerGalleryContainerElClick(event) {
 }
 
 function handlerModalClose(event) {
-    console.log(event);
     if (event.key === 'Escape') {
         this.close();
         document.removeEventListener('keydown', this.keydownHandler);

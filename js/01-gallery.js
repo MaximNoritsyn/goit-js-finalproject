@@ -3,6 +3,24 @@ import { galleryItems } from './gallery-items.js';
 
 //constants
 const galleryContainerEl = document.querySelector('.gallery');
+galleryContainerEl.insertAdjacentHTML('beforeend', createGalleryMarkup(galleryItems));
+
+const modalWindow = basicLightbox.create(`
+        <div div class= "modal" >
+            <img src="" width="800" height="600">
+        </div>
+    `, {
+        onShow: () => {
+            document.addEventListener('keydown', keydownHandler);
+        },
+        onclose: () => {
+            document.removeEventListener('keydown', keydownHandler);
+        }
+    });
+
+const keydownHandler = handlerModalClose.bind(modalWindow);
+
+galleryContainerEl.addEventListener('click', handlerGalleryContainerElClick);
 
 //functions
 function createGalleryItemMarkup({ preview, original, description }) {
@@ -27,26 +45,14 @@ function handlerGalleryContainerElClick(event) {
     if (event.target === event.currentTarget) {
         return;
     }
-    const modalWindow = basicLightbox.create(`
-        <div div class= "modal" >
-            <img src="" width="800" height="600">
-        </div>
-    `);
-    const keydownHandler = handlerModalClose.bind(modalWindow);
-    modalWindow.keydownHandler = keydownHandler;
+    
     modalWindow.element().querySelector('img').src = event.target.dataset.source;
     modalWindow.show();
-    document.addEventListener('keydown', keydownHandler);
 }
 
 function handlerModalClose(event) {
     if (event.key === 'Escape') {
         this.close();
-        document.removeEventListener('keydown', this.keydownHandler);
+        document.removeEventListener('keydown', keydownHandler);
     }
 }
-
-//main code
-galleryContainerEl.insertAdjacentHTML('beforeend', createGalleryMarkup(galleryItems));
-
-galleryContainerEl.addEventListener('click', handlerGalleryContainerElClick);
